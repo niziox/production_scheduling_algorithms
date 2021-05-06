@@ -24,7 +24,23 @@ def johnson_2_machines(t_ij):
             t_ij[1:, elem[1]] = threshold
 
         if np.all(t_ij[0, :] == 0):
-            return t_ij_opt
+            break
+
+    T_ij = np.zeros(t_ij.shape)
+    T_ij[0, :] = t_ij_opt[0, :]
+
+    for row in range(1, t_ij.shape[0]):
+        for col in range(t_ij.shape[1]):
+            if row == 1 and col == 0:
+                T_ij[row, col] = t_ij_opt[row, col]
+            elif row == 2 and col == 0:
+                T_ij[row, col] = T_ij[1, 0] + t_ij_opt[row, col]
+            elif row == 1 and col != 0:
+                T_ij[row, col] = T_ij[1, col-1] + t_ij_opt[row, col]
+            elif row == 2 and col != 0:
+                T_ij[row, col] = max(T_ij[2, col - 1], T_ij[1, col]) + t_ij_opt[row, col]
+
+    return T_ij
 
 
 if __name__ == '__main__':
